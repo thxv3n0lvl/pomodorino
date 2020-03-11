@@ -5,7 +5,6 @@ let activityUI = document.querySelector('.activity');
 let intervalId = null;
 const playerPauseIcon = 'https://img.icons8.com/metro/26/000000/pause.png';
 const playerPlayIcon = 'https://img.icons8.com/android/24/000000/play.png';
-const hasValue = el => el.textContent.trim() === ''
 
 // timer stuff
 var initTimer = () => {
@@ -24,18 +23,16 @@ const endTimer = () => {
 const startTimer = () => {
   if(playerUI.src.indexOf('play') > 0
       && !Number.isInteger(intervalId)) {
-    initTimer()
+    initTimer();
   } else {
-    endTimer()
+    endTimer();
   }
 }
 
 const setActivity = event => {
   if(event.keyCode === 13) {
-    // console.log(hasValue(activityUI))
-    // if(hasValue(activityUI)) return;
     // configures the paragraph
-    var p = document.createElement('p')
+    let p = document.createElement('p')
     p.innerText = activityUI.children[0].value;
     activityUI.children[0].replaceWith(p);
 
@@ -45,7 +42,11 @@ const setActivity = event => {
 
 const switchActivity = () => {
   if(activityUI.children[0].tagName === 'P') {
-    console.log('here');
+    let input = document.createElement('input')
+    input.value = activityUI.children[0].innerText;
+    activityUI.children[0].replaceWith(input);
+
+    endTimer();
   }
 }
 

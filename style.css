@@ -25,7 +25,8 @@ html {
   --border-dark-theme: #00FFFF;
 
   /* background: var(--main-bg-light-color); */
-  background: #eff0f3;
+  /* background: #eff0f3; */
+  --main-bg-color: var(--main-bg-light-color);
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -37,11 +38,14 @@ p {
 i {
   color: #d9376e;
 }
-
+body {
+  background-color: var(--main-bg-color);
+}
 @media screen and (prefers-color-scheme: dark) {
-  body {
-    background: #0f0e17;
+  :root {
+      --main-bg-color: var(--main-bg-dark-color);
   }
+
 
   h1,h2,h3,h4,h5,h6 {
     color: var(--main-headline-dark-color);
