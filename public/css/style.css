@@ -19,14 +19,11 @@ html {
   --main-paragraph-light-theme: #2a2a2a;
   --border-light-theme: #020826;
 
-  --main-bg-dark-color: #0f0e17;
+  /* --main-bg-dark-color: #0f0e17; */
+  --main-bg-dark-color: gray;
   --main-headline-dark-color: #fffffe;
   --main-paragraph-dark-theme: #a7a9be;
   --border-dark-theme: #00FFFF;
-
-  /* background: var(--main-bg-light-color); */
-  /* background: #eff0f3; */
-  --main-bg-color: var(--main-bg-light-color);
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -39,13 +36,16 @@ i {
   color: #d9376e;
 }
 body {
-  background-color: var(--main-bg-color);
+  background: var(--main-bg-light-color);
+}
+.actions {
+  border-bottom: thick dotted var(--border-light-theme);
+  border-top: thick dotted var(--border-light-theme);
 }
 @media screen and (prefers-color-scheme: dark) {
-  :root {
-      --main-bg-color: var(--main-bg-dark-color);
+  body {
+      background: var(--main-bg-dark-color);
   }
-
 
   h1,h2,h3,h4,h5,h6 {
     color: var(--main-headline-dark-color);
@@ -53,31 +53,26 @@ body {
   p {
     color: var(--main-paragraph-dark-theme);
   }
-  .container > *:not(.menu):not(.counter){
-    border-bottom: thick dotted var(--border-dark-theme);
-  }
+  .actions {
+  border-bottom: thick dotted var(--border-dark-theme);
+  border-top: thick dotted var(--border-dark-theme);
 }
-
+}
 .container {
   height: 28em;
   margin: 4%;
   height: 90vh;
   border-radius: 15px;
   display: grid;
-  grid-template-rows: 2fr .5fr 2fr 1fr 1fr;
+  grid-template-rows: 2fr 2em 3fr 1fr 1fr;
   grid-template-areas:
   "counter"
   "bar"
-  "."
+  "activity--list"
   "activity"
   "actions"
   "menu";
 }
-
-.container > *:not(.menu):not(.counter):not(.bar){
-  border-bottom: thick dotted var(--border-light-theme);
-}
-
 .container > * {
   display: flex;
   justify-content: center;
@@ -92,26 +87,29 @@ body {
 .actions {
   grid-area: actions;
 }
+.activity--list {
+  grid-area: activity--list;
+  justify-content: flex-start;
+}
 .activity {
   grid-area: activity;
+  margin-bottom: 2rem;
 }
 .activity > input {
-  flex: 0 1 100%;
+  flex: 0 1 45%;
   height: 100%;
   text-align: center;
 }
-
 .bar {
   background-color: red;
   animation: foobar;
 }
-
 @keyframes foobar {
-  0%   {background-image: linear-gradient(to right, red , yellow 100%);}
+  0%   {background-image: red;}
   20%  {background-image: linear-gradient(to right, red , yellow 80%);}
   40%  {background-image: linear-gradient(to right, red , yellow 60%);}
-  60% {background-image: linear-gradient(to right, red , yellow 40%);}
-  80% {background-image: linear-gradient(to right, red , yellow 20%);}
-  100% {background-image: linear-gradient(to right, red , yellow 0%);}
+  60%  {background-image: linear-gradient(to right, red , yellow 40%);}
+  80%  {background-image: linear-gradient(to right, red , yellow 20%);}
+  100% {background-image: yellow;}
 
 }

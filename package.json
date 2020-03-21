@@ -1,0 +1,23 @@
+{
+  "name": "pomorodo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thxv3n0lvl/pomodorino.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thxv3n0lvl/pomodorino/issues"
+  },
+  "homepage": "https://github.com/thxv3n0lvl/pomodorino#readme",
+  "dependencies": {
+    "express": "4.17.1"
+  }
+}
