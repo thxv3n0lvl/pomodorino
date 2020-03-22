@@ -1,4 +1,3 @@
-
 const uiElements = {
   timer: document.querySelector('div.counter h1'),
   player: document.querySelector('.player'),
@@ -11,6 +10,8 @@ const uiElements = {
   },
   activityActionSlot() { return this.activity.children[0] }
 };
+const POMODORO_TIME = 25;
+const activitiesCompleted = [];
 
 const timer = {
   decrease: (el) => el.innerHTML --,
@@ -18,15 +19,35 @@ const timer = {
 };
 
 let intervalId = null;
+let progressBar = document.querySelector('.bar--progress');
 
-// timer stuff
+
+
 const initTimer = () => {
   uiElements.player.src = uiElements.icons.pause;
+  let width = 1;
+  const pomtime = 25;
+  let count = 1;
   intervalId = window.setInterval(() => {
-  uiElements.timer.innerHTML == 0 ? endTimer('end') : timer.decrease(uiElements.timer);
+    if (uiElements.timer.innerHTML == 0) {
+      endTimer('end');
+      return;
+    }
 
+    timer.decrease(uiElements.timer)
+
+    // progress bar test
+
+    const internInterval = window.setInterval(()=>{
+      console.log('count', count, 'width', width);
+      progressBar.style = `width: ${width}%`;
+      width = (count * 100) / pomtime;
+      count++;
+    }, 10);
+
+
+    // end of progrss bar test
   }, 1000); // 60000 Executed every minute
-  uiElements.bar.setAttribute('style', `animation: foobar ${timer.from(uiElements.timer) * 1000}ms;`);
 }
 
 const endTimer = (action) => {
@@ -36,16 +57,17 @@ const endTimer = (action) => {
   if (action == 'end') {
     const val = uiElements.activityActionSlot().innerText;
     if (!val) return;
-    addItemToActivityList(val);
-    replaceElementWithContent(uiElements.activityActionSlot(), 'input', true)
+    addItemToActivityArray(val);
+    addItemToActivityListUI(val);
+    replaceElementWithContent(uiElements.activityActionSlot(), 'input', true);
   } else if (action == 'pause') {
-    replaceElementWithContent(uiElements.activityActionSlot(), 'input')
+    replaceElementWithContent(uiElements.activityActionSlot(), 'input');
   }
 }
 
-const addItemToActivityList = (val) => {
-  uiElements.activityList.insertAdjacentHTML('beforeend', `<li>${val}</li>`)
-}
+const addItemToActivityArray = async (val) => await localSorage.setItem('items', activitiesCompleted.push(val));
+const addItemToActivityListUI = (val) => uiElements.activityList.insertAdjacentHTML('beforeend', `<li>${val}</li>`);
+
 
 const startTimer = () => {
   if(uiElements.player.src.indexOf('play') > 0
@@ -79,6 +101,15 @@ const switchActivity = () => {
   }
 }
 
+const loadActivitiesStored = async () => {
+  addItemToActivityArray(await localStorage.getItem('items'));
+
+};
+
+const setInitialTimerUI = (time) => uiElements.timer.innerHTML = time;
+
+// loadActivitiesStored();
+setInitialTimerUI(POMODORO_TIME);
 uiElements.activity.addEventListener('keydown', setActivity);
 uiElements.activity.addEventListener('blur', setActivity, true);
 
