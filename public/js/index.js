@@ -4,13 +4,17 @@ const uiElements = {
   activity: document.querySelector('.activity'),
   activityList: document.querySelector('.activity--list > ul'),
   bar: document.querySelector('.bar'),
+  progressBar: document.querySelector('.bar--progress'),
   icons: {
     pause: 'https://img.icons8.com/metro/26/000000/pause.png',
     play: 'https://img.icons8.com/android/24/000000/play.png'
   },
   activityActionSlot() { return this.activity.children[0] }
 };
+
 const POMODORO_TIME = 25;
+const animationProps = (state) => `animation: progressbar ${POMODORO_TIME * 1000}ms;
+                        animation-play-state: ${state};`
 const activitiesCompleted = [];
 
 const timer = {
@@ -19,35 +23,35 @@ const timer = {
 };
 
 let intervalId = null;
-let progressBar = document.querySelector('.bar--progress');
 
 
+const timeCounter = () => {
+  if (uiElements.timer.innerHTML == 0) {
+    endTimer('end');
+    return;
+  }
+  // progressBarAnimation()()
 
-const initTimer = () => {
-  uiElements.player.src = uiElements.icons.pause;
+  timer.decrease(uiElements.timer);
+
+}
+
+const progressBarAnimation = () => {
   let width = 1;
   const pomtime = 25;
   let count = 1;
-  intervalId = window.setInterval(() => {
-    if (uiElements.timer.innerHTML == 0) {
-      endTimer('end');
-      return;
-    }
+  return function() {
+    progressBar.style = `width: ${width}%`;
+    width = (count * 100) / pomtime;
+    count++;
+  };
+}
 
-    timer.decrease(uiElements.timer)
+const initTimer = () => {
+  uiElements.player.src = uiElements.icons.pause;
+  intervalId = window.setInterval(timeCounter, 1000); // 60000 Executed every minute
+  uiElements.progressBar.setAttribute('style', animationProps('running'));
 
-    // progress bar test
-
-    const internInterval = window.setInterval(()=>{
-      console.log('count', count, 'width', width);
-      progressBar.style = `width: ${width}%`;
-      width = (count * 100) / pomtime;
-      count++;
-    }, 10);
-
-
-    // end of progrss bar test
-  }, 1000); // 60000 Executed every minute
 }
 
 const endTimer = (action) => {
@@ -61,6 +65,7 @@ const endTimer = (action) => {
     addItemToActivityListUI(val);
     replaceElementWithContent(uiElements.activityActionSlot(), 'input', true);
   } else if (action == 'pause') {
+    uiElements.progressBar.setAttribute('style', animationProps('paused'));
     replaceElementWithContent(uiElements.activityActionSlot(), 'input');
   }
 }
