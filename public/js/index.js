@@ -12,10 +12,11 @@ const uiElements = {
   activityActionSlot() { return this.activity.children[0] }
 };
 
-const POMODORO_TIME = 25;
+// const POMODORO_TIME = 25;
+const POMODORO_TIME = 1;
 const animationProps = (state) => `animation: progressbar ${POMODORO_TIME * 1000}ms;
                         animation-play-state: ${state};`
-const activitiesCompleted = [];
+let activitiesCompleted = [];
 
 const timer = {
   decrease: (el) => el.innerHTML --,
@@ -30,10 +31,7 @@ const timeCounter = () => {
     endTimer('end');
     return;
   }
-  // progressBarAnimation()()
-
   timer.decrease(uiElements.timer);
-
 }
 
 const progressBarAnimation = () => {
@@ -59,10 +57,10 @@ const endTimer = (action) => {
   uiElements.player.src = uiElements.icons.play;
   intervalId = null;
   if (action == 'end') {
-    const val = uiElements.activityActionSlot().innerText;
-    if (!val) return;
-    addItemToActivityArray(val);
-    addItemToActivityListUI(val);
+    const activityText = uiElements.activityActionSlot().innerText;
+    if (!activityText) return;
+    addItemToActivityArray(activityText);
+    addItemToActivityListUI(activityText);
     replaceElementWithContent(uiElements.activityActionSlot(), 'input', true);
   } else if (action == 'pause') {
     uiElements.progressBar.setAttribute('style', animationProps('paused'));
@@ -70,8 +68,11 @@ const endTimer = (action) => {
   }
 }
 
-const addItemToActivityArray = async (val) => await localSorage.setItem('items', activitiesCompleted.push(val));
-const addItemToActivityListUI = (val) => uiElements.activityList.insertAdjacentHTML('beforeend', `<li>${val}</li>`);
+const addItemToActivityArray = async (val) => {
+  activitiesCompleted.push(val)
+  await localforage.setItem('activitiesCompleted', activitiesCompleted);
+};
+const addItemToActivityListUI = (activities) => uiElements.activityList.insertAdjacentHTML('beforeend', `<li>${activities}</li>`);
 
 
 const startTimer = () => {
@@ -106,15 +107,21 @@ const switchActivity = () => {
   }
 }
 
-const loadActivitiesStored = async () => {
-  addItemToActivityArray(await localStorage.getItem('items'));
+const loadActivitiesStored = () => {
+  localforage.getItem('activitiesCompleted').then(r => {
+    if (!r) return;
+    activitiesCompleted = r;
+    addItemToActivityListUI(activitiesCompleted);
 
+  });
 };
 
 const setInitialTimerUI = (time) => uiElements.timer.innerHTML = time;
 
-// loadActivitiesStored();
+Promise.resolve(loadActivitiesStored());
+console.log('activitiesCompleted', activitiesCompleted);
 setInitialTimerUI(POMODORO_TIME);
+
 uiElements.activity.addEventListener('keydown', setActivity);
 uiElements.activity.addEventListener('blur', setActivity, true);
 
